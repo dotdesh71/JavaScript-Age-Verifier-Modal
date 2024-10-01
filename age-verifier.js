@@ -1,0 +1,84 @@
+ // Create the age verification modal dynamically
+        function createModal() {
+            const modalHtml = `
+                <div class="modal fade" id="ageVerifyModal" tabindex="-1" aria-labelledby="ageVerifyModalLabel" aria-hidden="true">
+                    <div class="modal-dialog modal-dialog-centered">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h5 class="modal-title" id="ageVerifyModalLabel">Age Verification</h5>
+                            </div>
+                            <div class="modal-body">
+                                <p><strong>18+ Content Warning:</strong> This content is intended for adults only. Please verify that you are over 18 years old to proceed.</p>
+                                <p>Are you over 18 years old?</p>
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-success" id="yesBtn">Yes</button>
+                                <button type="button" class="btn btn-danger" id="noBtn">No</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            `;
+            document.body.insertAdjacentHTML('beforeend', modalHtml);
+        }
+
+        // Set cookie function
+        function setCookie(name, value, days) {
+            const d = new Date();
+            d.setTime(d.getTime() + (days * 24 * 60 * 60 * 1000));
+            let expires = "expires=" + d.toUTCString();
+            document.cookie = name + "=" + value + ";" + expires + ";path=/";
+        }
+
+        // Get cookie function
+        function getCookie(name) {
+            let cname = name + "=";
+            let decodedCookie = decodeURIComponent(document.cookie);
+            let ca = decodedCookie.split(';');
+            for (let i = 0; i < ca.length; i++) {
+                let c = ca[i].trim();
+                if (c.indexOf(cname) == 0) {
+                    return c.substring(cname.length, c.length);
+                }
+            }
+            return "";
+        }
+
+        // Check if user has verified their age
+        function checkAgeVerification() {
+            const ageVerified = getCookie("ageVerified");
+            if (ageVerified === "yes") {
+                document.body.style.display = "block"; // Show content
+            } else if (ageVerified === "no") {
+                alert("You are not allowed to access this site.");
+                window.location.href = "https://www.google.com"; // Redirect if user is underage
+            } else {
+                createModal();
+                const ageModal = new bootstrap.Modal(document.getElementById('ageVerifyModal'));
+                ageModal.show();
+            }
+        }
+
+        // Add event listeners for buttons
+        function addEventListeners() {
+            document.getElementById("yesBtn").addEventListener("click", function () {
+                setCookie("ageVerified", "yes", 30); // Save choice in cookie for 30 days
+                document.body.style.display = "block";
+                const ageModal = bootstrap.Modal.getInstance(document.getElementById('ageVerifyModal'));
+                ageModal.hide();
+            });
+
+            document.getElementById("noBtn").addEventListener("click", function () {
+                setCookie("ageVerified", "no", 30); // Save choice in cookie for 30 days
+                window.location.href = "https://www.google.com"; // Redirect to another page
+            });
+        }
+
+        // Main function to initialize age verification
+        function initAgeVerification() {
+            checkAgeVerification();
+            addEventListeners();
+        }
+
+        // Execute on page load
+        window.onload = initAgeVerification;
