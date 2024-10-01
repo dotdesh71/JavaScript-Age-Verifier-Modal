@@ -1,6 +1,6 @@
 # JavaScript-Age-Verifier-Modal
 
-# Age Verification Modal Using HTML, CSS, Bootstrap, Javascript
+### Age Verification Modal Using HTML, CSS, Bootstrap, Javascript
 
 This project implements a dynamic age verification modal using JavaScript and Bootstrap. The modal prompts users to verify their age before accessing content intended for adults only. If the user confirms they are over 18 years old, a cookie is set to remember their choice for future visits.
 
